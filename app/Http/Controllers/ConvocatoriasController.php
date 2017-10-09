@@ -62,7 +62,6 @@ function covocatorias($id){
      */
     public function store(Request $request) {
 
-
         $fecha = DB::select('SELECT curdate() as fecha');
  
        Convocatoria::create([
@@ -73,15 +72,42 @@ function covocatorias($id){
             'idcat' => $request['cbocategorias'],        
         ]);
 
+
+        $sql = DB::select ('select proveedor,correo FROM proveedor, prov_cat WHERE proveedor.id=prov_cat.id and prov_cat.idcat='.$request['cbocategorias']);
+
+        $cant = count($sql);
+        $c = 1;
+        $s = 0;
+
+        while ($c <= $cant) {
+
+            $correo = $sql[$s]->correo;
+            
+            Mail::send('emails.nuevaconvocatoria',$request->all(), function($msj) use ($correo){
+
+                $msj->subject('Nueva Convocatoria (INCOTEC)');
+                $msj->to($correo);
+
+            });
+
+            $s = $s + 1;
+            $c = $c + 1;
+
+        }
+
+
         Session::flash('message','CONVOCATORIA PUBLICADA');
         return Redirect::to('/escritorio');
 
-        
+
     }
 
 
 
     public function logout() {
+
+ 
+
 
     }
 

@@ -67,6 +67,7 @@ class ConvocatoriasActivasController extends Controller {
         $prov = DB::select ('select correo FROM proveedor WHERE id='.$request['cboproveedor']);
         $correo = $prov[0]->correo;
 
+
         Mail::send('emails.adjudicada',$request->all(), function($msj) use ($correo){
 
             $msj->subject('Propuesta Adjudicada (INCOTEC)');
