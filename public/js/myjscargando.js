@@ -18,6 +18,24 @@ $(document).ready(function() {
 
 
 
+
+    $('#btnPass').click(function() {  
+
+        var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+
+        if ( regex.test($('#emails').val().trim()) ) {
+
+            $("#btnPass").css("display","none");
+            $("#btnCancelarPass").css("display","none");
+            $("#cargandoR").show();
+
+        }
+       
+    });
+
+
+
+
     $('#btnR').click(function() {  
 
         var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
@@ -38,6 +56,8 @@ $(document).ready(function() {
         if ( ($("#txttitulo").val() != '') && ($("#txtlink").val() != '') && ($("#cbocategorias").val() != '') ) {
 
             $("#btnCrear").css("display","none");
+            $("#btnCrearCancelar").css("display","none");
+            
             $("#cargandoR").show();
 
         }
@@ -50,7 +70,35 @@ $(document).ready(function() {
         if ( $("#cboproveedor").val() != '' ) {
 
             $("#btnAdjudicar").css("display","none");
+            $("#btnAdjudicarCancelar").css("display","none");
+
             $("#cargandoAd").show();
+
+        }
+       
+    });
+
+
+    $('#btnc').click(function() {  
+
+        if ( ($("#asunto").val() != '') && ($("#mensaje").val() != '') ) {
+
+            $("#btnc").css("display","none");
+
+            $("#cargandoc").show();
+
+        }
+       
+    });
+
+
+    $('#btnAyuda').click(function() {  
+
+        if ( ($("#asunto").val() != '') && ($("#mensaje").val() != '') ) {
+
+            $("#btnAyuda").css("display","none");
+
+            $("#cargandoAyuda").show();
 
         }
        

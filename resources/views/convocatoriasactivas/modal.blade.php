@@ -66,7 +66,7 @@
 
           {!!Form::close()!!}
               <!--button class="btn btn-primary"  onclick="crearalimento()" id="btnregistrar">REGISTRAR</button-->
-          <button data-dismiss="modal" class="btn btn-danger">CANCELAR</button>
+          <button data-dismiss="modal" class="btn btn-danger" name="btnAdjudicarCancelar" id="btnAdjudicarCancelar">CANCELAR</button>
        </div>
       </div>
 
