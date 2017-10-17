@@ -27,22 +27,25 @@ class ConvocatoriasAprobadasController extends Controller {
 
         if(Auth::user()->privilegio==0)
         {
-            $sql=DB::table('categoria')
-            ->join('convocatoria','categoria.idcat','=','convocatoria.idcat')
-            ->select('nombre','idpublic','titulo','descripcion','fecha')
-            ->where('convocatoria.id','=',Auth::user()->id)
-            ->orderBy('fecha', 'desc')
+            $sql=DB::table('convocatoria')
+            ->join('prov_conv','convocatoria.idpublic','=','prov_conv.idpublic')
+            ->join('categoria','convocatoria.idcat','=','categoria.idcat')
+            ->select('nombre','convocatoria.idpublic','titulo','descripcion','fecha', 'fecha_ad')
+            ->where('prov_conv.id','=',Auth::user()->id)
+            ->orderBy('fecha_ad', 'desc')
             ->paginate(10);        
             return view('convocatoriasaprobadas.index',['sql'=>$sql]);  
         }
         elseif (Auth::user()->privilegio==1) {
             $sqlAdm=DB::table('categoria')
             ->join('convocatoria','categoria.idcat','=','convocatoria.idcat')
-            ->join('proveedor','proveedor.id','=','convocatoria.id')
-            ->select('nombre','proveedor','idpublic','titulo','descripcion','fecha')
-            ->orderBy('fecha', 'desc')
+            ->join('prov_conv','convocatoria.idpublic','=','prov_conv.idpublic')
+            ->join('proveedor','proveedor.id','=','prov_conv.id')
+            ->select('nombre','proveedor','prov_conv.idpublic','titulo','descripcion','fecha','fecha_ad')
+            ->orderBy('fecha_ad', 'desc')
             ->paginate(10);        
             return view('convocatoriasaprobadas.index',['sqlAdm'=>$sqlAdm]); 
+
         }
                 
     }

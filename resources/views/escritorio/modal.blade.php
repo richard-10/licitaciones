@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div id="ModalContraseña" class="modal fade" role="dialog">
+<div id="ModalCrear" class="modal fade" role="dialog">
   <div class="modal-dialog modal-md">
     <!-- Modal content-->
     <div class="modal-content">
@@ -53,7 +53,7 @@
 
           {!!Form::close()!!}
               <!--button class="btn btn-primary"  onclick="crearalimento()" id="btnregistrar">REGISTRAR</button-->
-          <button data-dismiss="modal" class="btn btn-danger">CANCELAR</button>
+          <button data-dismiss="modal" class="btn btn-danger" id="btnCrearCancelar" name="btnCrearCancelar">CANCELAR</button>
        </div>
       </div>
 

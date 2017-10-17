@@ -229,7 +229,7 @@
 
                           <a href="{!!URL::to($ruta)!!}">
 
-                            <?php $c = DB::select('select COUNT(*) as nro FROM convocatoria WHERE estado="activa" AND idcat='.$mov->idcat); ?>
+                            <?php $c = DB::select('select COUNT(*) as nro FROM convocatoria WHERE estado<>"inactiva" AND idcat='.$mov->idcat); ?>
 
                             @foreach($c as $mov2)
 

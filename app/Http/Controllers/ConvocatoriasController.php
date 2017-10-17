@@ -41,7 +41,7 @@ function covocatorias($id){
     ->join('categoria','categoria.idcat','=','convocatoria.idcat')
     ->select('nombre','idpublic','titulo','descripcion','fecha','estado')
     ->where('convocatoria.idcat','=',$id)
-    ->where('convocatoria.estado','=','activa')
+    ->where('convocatoria.estado','<>','inactiva')
     ->orderBy('fecha', 'desc')
     ->paginate(10);  
 

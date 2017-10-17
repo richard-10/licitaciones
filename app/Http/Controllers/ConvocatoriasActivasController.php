@@ -9,6 +9,8 @@ use Mail;
 use App\Http\Requests;
 use App\Http\Requests\LoginRequest;
 
+use App\Prov_Conv;
+
 use Auth;
 use Session;
 use Redirect;
@@ -33,7 +35,7 @@ class ConvocatoriasActivasController extends Controller {
             ->join('convocatoria','categoria.idcat','=','convocatoria.idcat')
             ->select('nombre','idpublic','titulo','descripcion','fecha','estado')
             ->where('prov_cat.id','=',Auth::user()->id)
-            ->where('convocatoria.estado','=','activa')
+            ->where('convocatoria.estado','<>','inactiva')
             ->orderBy('fecha', 'desc')
             ->paginate(10);  
 
@@ -57,16 +59,48 @@ class ConvocatoriasActivasController extends Controller {
     }
 
 
+    function parciales() {
+
+        if(Auth::user()->privilegio==1)
+        {
+
+            $sqlAdm=DB::table('categoria')
+            ->join('convocatoria','categoria.idcat','=','convocatoria.idcat')
+            ->join('prov_conv','convocatoria.idpublic','=','prov_conv.idpublic')
+            ->join('proveedor','proveedor.id','=','prov_conv.id')
+            ->select('nombre','proveedor','prov_conv.idpublic','titulo','descripcion','fecha','fecha_ad','estado')
+            ->where('convocatoria.estado','=','parcial')
+            ->orderBy('fecha_ad', 'desc')
+            ->paginate(10);   
+
+            return view('convocatoriasactivas.parciales',['sqlAdm'=>$sqlAdm]);  
+
+        }
+        elseif (Auth::user()->privilegio==0) {
+
+           return view('escritorio.index');
+        }
+    }
 
 
  function adjudicar_convocatoria(Request $request) {
 
-        DB::table('convocatoria')->where('idpublic', $request['txtidpublic'])->update(['id' => $request['cboproveedor'], 'estado' => 'inactiva' ]);
+        DB::table('convocatoria')->where('idpublic', $request['txtidpublic'])->update(['estado' => 'inactiva' ]);
+
+
+
+        $fecha = DB::select('SELECT curdate() as fecha');
+ 
+       Prov_Conv::create([
+            'id' => $request['cboproveedor'],
+            'idpublic' => $request['txtidpublic'],
+            'fecha_ad' => $fecha[0]->fecha,     
+        ]);
+
 
 
         $prov = DB::select ('select correo FROM proveedor WHERE id='.$request['cboproveedor']);
         $correo = $prov[0]->correo;
-
 
         Mail::send('emails.adjudicada',$request->all(), function($msj) use ($correo){
 
@@ -80,6 +114,50 @@ class ConvocatoriasActivasController extends Controller {
         return Redirect::to('/convocatoriasactivas');
         
     }
+
+
+
+function adjudicar_convocatoria_parcial(Request $request) {
+
+        DB::table('convocatoria')->where('idpublic', $request['txtidpublic'])->update(['estado' => 'parcial' ]);
+
+
+
+        $fecha = DB::select('SELECT curdate() as fecha');
+ 
+       Prov_Conv::create([
+            'id' => $request['cboproveedorP'],
+            'idpublic' => $request['txtidpublic'],
+            'fecha_ad' => $fecha[0]->fecha,     
+        ]);
+
+
+
+        $prov = DB::select ('select correo FROM proveedor WHERE id='.$request['cboproveedorP']);
+        $correo = $prov[0]->correo;
+
+        Mail::send('emails.adjudicadaParcial',$request->all(), function($msj) use ($correo){
+
+            $msj->subject('Propuesta Adjudicada (INCOTEC)');
+            $msj->to($correo);
+
+        });
+
+
+        Session::flash('message','CONVOCATORIA ADJUDICADA');
+        return Redirect::to('/convocatoriasactivas');
+        
+    }
+
+
+function cerrar_convocatoria(Request $request){
+
+    DB::table('convocatoria')->where('idpublic', $request['txtidpublic'])->update(['estado' => 'inactiva' ]);
+
+    Session::flash('message','CONVOCATORIA CERRADA');
+    return Redirect::to('/convocatoriasactivas');
+}
+
 
 
     public function create() {

@@ -3,64 +3,60 @@
 
 @include('escritorio.modal')
 
-  <div class="container">
 
-    <div class="row">
+<div class="container">
+
+  <div class="row">
+
+
+
+
+
 
 @if(Auth::user()->privilegio != 1)
 
-      <div class="col-lg-6">
+    <div class="col-lg-6">
 
-		    <?php  $sql = DB::select('select nombre, idpublic, titulo, descripcion, DATE_FORMAT(fecha,"%d-%m-%Y") AS fecha FROM categoria, convocatoria WHERE categoria.idcat=convocatoria.idcat AND convocatoria.id='.Auth::user()->id. ' Order by fecha DESC LIMIT 5'); ?>
+		    <?php  $sql = DB::select('SELECT nombre, convocatoria.idpublic, titulo, descripcion, fecha, fecha_ad FROM convocatoria, categoria, prov_conv WHERE convocatoria.idpublic=prov_conv.idpublic and convocatoria.idcat=categoria.idcat and prov_conv.id='.Auth::user()->id. ' Order by fecha_ad DESC LIMIT 5'); ?>
 
             
             <h3><i class="fa fa-star" aria-hidden="true" style="color: #FACB14;"></i> Convocatorias Adjudicadas
              <a href="{!!URL::to('convocatoriasaprobadas')!!}"> <button class="btn btn-primary pull-right" style="font-size: 15px; background-color: black; border-color: black;">Ver Todas</button></a>
             </h3>	
+            
+            <br>
 
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive" style="overflow-x:inherit">
 
-			<div class="panel-group" id="accordion" role="tablist">
-
-    			@foreach($sql as $mov)
-
-      				<div class="panel panel-default">
-        				<div class="panel-heading" role="tab" id="ab" >
-
-          					<h2 class="panel-title">
-
-            					<?php $x = "#".$mov->idpublic; ?>
-              					<a href="<?php echo "$x"; ?>" data-toggle="collapse" data-parent="#accordion">
-                					<strong style="font-size: 18px;">{{$mov->titulo}}</strong>
-
-                					<i class="fa fa-chevron-circle-down pull-right" aria-hidden="true" style="font-size: 23px;"></i>
-                					
-              					</a><br>
-
-                        {{$mov->nombre}}
-
-                          <p style="font-size: 15px;" class="pull-right">{{$mov->fecha}}</p>
-
-          					</h2>
-
-        				</div>  
-
-        				<div id="{{$mov->idpublic}}" class="panel-collapse collapse">
-         					<div class="panel-body">
-
-                  <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 15px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> DESCARGAR</button></a>
-                  
-            					<!-- <p style="font-size: 17px;">{!! nl2br(e($mov->descripcion)) !!}</p> -->
-          					</div>
-        				</div>
-   					 </div>  
-
-    			@endforeach
-
-  			</div>
+      <table class="table table-striped table-bordered table-condensed table-hover" style="background: white">
+          <thead>
+            <th style="font-size: 16px;"><center>Título</center></th>
+            <th style="font-size: 16px;"><center>Categoria</center></th>
+            <th style="font-size: 16px;"><center>Fecha-Adjudicación</center></th>
+            <th style="font-size: 16px;"><center>Opciones</center></th>
+          </thead>
+          <tbody align="center" id="body_empresa">          
+       @foreach($sql as $mov)
+          <tr>
+            <td style="font-size: 15px;">{{$mov->titulo}}</td>          
+            <td style="font-size: 15px;">{{$mov->nombre}}</td>
+            <td style="font-size: 15px;">{{$mov->fecha_ad}}</td>
+            <td style="font-size: 15px;"> <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 14px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 18px;"></i> DESCARGAR</button></a>
+            </td>
+          </tr>
+        @endforeach
+          </tbody>          
+      </table>
 
       </div>
+    </div>
+
+
+    </div>
 
  @endif  
+
 
 @if(Auth::user()->privilegio != 1)
 
@@ -73,18 +69,20 @@
           <div class="form-group">
 
             <label style="font-size: 18px;">Asunto:</label><br>
-            <input type="text" class="form-control" name="asunto" placeholder="Asunto" required style="border-radius: 5px; width: 85%;">
+            <input type="text" class="form-control" name="asunto" id="asunto" placeholder="Asunto" required style="border-radius: 5px; width: 85%;">
 
                 <br>
 
             <label style="font-size: 18px;">Mensaje:</label>
-            <textarea class="form-control" rows="5" name="mensaje" placeholder="Mensaje" required style="border-radius: 5px; width: 85%;"></textarea>
+            <textarea class="form-control" rows="5" name="mensaje" id="mensaje" placeholder="Mensaje" required style="border-radius: 5px; width: 85%;"></textarea>
 
             <input type="hidden" name="correo" value="<?php echo Auth::user()->correo; ?>">
 
           </div>
 
-          <button class="btn btn-lg btn-primary" type="submit" id="btnc">ENVIAR</button> <br><br>
+          <img src="images/cargando.gif" width="175" height="50" id="cargandoc" style="display: none;">
+
+          <button class="btn btn-lg btn-primary" type="submit" id="btnc" name="btnc">ENVIAR</button> <br><br>
  
         {!!Form::close()!!}
 
@@ -96,11 +94,15 @@
 @endif
 
 
+
+
 <!-- ///////////////////////////**ADMIN**////////////////////////////////////// -->
+
+
+
 
 @if(Auth::user()->privilegio == 1)
 
-     <div class="row">
 
         <div class="col-lg-1"></div>
 
@@ -112,13 +114,13 @@
                 @foreach($nro as $res)
                   <h3>{{$res->cant}}</h3>
                 @endforeach
-              <p style="font-size: 17px;">Convocatorias</p>
+              <p style="font-size: 18px;">Convocatorias</p>
             </div>
 
             <div class="icon">
              <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
             </div>
-            <a href="#" class="small-box-footer" style="font-size: 17px;" data-toggle="modal" data-target="#ModalContraseña">Añadir Nueva <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+            <a href="#" class="small-box-footer" style="font-size: 17px;" data-toggle="modal" data-target="#ModalCrear">Añadir Nueva <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
           </div>
 
           @include('alerts.success')
@@ -130,11 +132,11 @@
 
           <div class="small-box bg-yellow">
             <div class="inner">
-              <?php  $nro2 = DB::select('SELECT COUNT(*) as cant FROM convocatoria WHERE estado="activa"'); ?>
+              <?php  $nro2 = DB::select('SELECT COUNT(*) as cant FROM convocatoria WHERE estado="activa" or estado="parcial"'); ?>
                 @foreach($nro2 as $res2)
                   <h3>{{$res2->cant}}</h3>
                 @endforeach
-              <p style="font-size: 17px;">Convocatorias Activas</p>
+              <p style="font-size: 18px;">Activas-Parciales</p>
             </div>
 
             <div class="icon">
@@ -153,7 +155,7 @@
                 @foreach($nro2 as $res2)
                   <h3>{{$res2->cant}}</h3>
                 @endforeach
-              <p style="font-size: 17px;">Convocatorias Inactivas</p>
+              <p style="font-size: 18px;">Inactivas</p>
             </div>
 
             <div class="icon">
@@ -164,68 +166,56 @@
           
         </div>
         
-      </div>
 
 <!-- //////////////////////////////////////////////////////////////////// -->
 
-      <div class="col-lg-6">
+  <div class="col-lg-6">
 
-        <?php  $sql = DB::select('select nombre, idpublic, titulo, descripcion, DATE_FORMAT(fecha,"%d-%m-%Y") AS fecha, estado FROM categoria, convocatoria WHERE categoria.idcat=convocatoria.idcat and convocatoria.estado="activa" Order by fecha desc LIMIT 7'); ?>
+        <?php  $sql = DB::select('select nombre, idpublic, titulo, descripcion, DATE_FORMAT(fecha,"%d-%m-%Y") AS fecha, estado FROM categoria, convocatoria WHERE categoria.idcat=convocatoria.idcat and convocatoria.estado<>"inactiva" Order by fecha desc LIMIT 7'); ?>
 
           <div>
             <h3> Últimas Convocatorias </h3> 
              <!--<a href="{!!URL::to('convocatoriasaprobadas')!!}"> <button class="btn btn-primary pull-right" style="font-size: 15px; background-color: black; border-color: black;">Ver Todas</button></a> -->
           </div>
-            
+          
 
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive" style="overflow-x:inherit">
 
-      <div class="panel-group" id="accordion" role="tablist">
-
-          @foreach($sql as $mov)
-
-              <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="ab" >
-
-                    <h2 class="panel-title">
-
-                      <?php $x = "#".$mov->idpublic; ?>
-                        <a href="<?php echo "$x"; ?>" data-toggle="collapse" data-parent="#accordion">
-                          <strong style="font-size: 18px;">{{$mov->titulo}}</strong>
-
-                          <i class="fa fa-chevron-circle-down pull-right" aria-hidden="true" style="font-size: 23px;"></i>
-                          
-                        </a><br>
-
-                        {{$mov->nombre}}
-
-                          <p style="font-size: 15px;" class="pull-right">{{$mov->fecha}}</p>
-
-                    </h2>
-
-                </div>  
-
-                <div id="{{$mov->idpublic}}" class="panel-collapse collapse">
-                  <div class="panel-body">
-
-                  <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 15px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> DESCARGAR</button></a>
-                  
-                      <!-- <p style="font-size: 17px;">{!! nl2br(e($mov->descripcion)) !!}</p> -->
-                    </div>
-                </div>
-             </div>  
-
-          @endforeach
-
-        </div>
+      <table class="table table-striped table-bordered table-condensed table-hover" style="background: white">
+          <thead>
+            <th style="font-size: 16px;"><center>Título</center></th>
+            <th style="font-size: 16px;"><center>Categoria</center></th>
+            <th style="font-size: 16px;"><center>Fecha-Publicación</center></th>
+            <th style="font-size: 16px;"><center>Opciones</center></th>
+          </thead>
+          <tbody align="center" id="body_empresa">          
+       @foreach($sql as $mov)
+          <tr>
+            <td style="font-size: 15px;">{{$mov->titulo}}</td>          
+            <td style="font-size: 15px;">{{$mov->nombre}}</td>
+            <td style="font-size: 15px;">{{$mov->fecha}}</td>
+            <td style="font-size: 15px;"> <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 14px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 18px;"></i> DESCARGAR</button></a>
+            </td>
+          </tr>
+        @endforeach
+          </tbody>          
+      </table>
 
       </div>
+    </div>
+
+  </div>
 
 @endif  
 
 
-    </div>
+
+
 
   </div>
+
+</div>
 
 
 @endsection

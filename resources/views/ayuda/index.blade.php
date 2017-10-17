@@ -15,18 +15,20 @@
           <div class="form-group">
 
             <label style="font-size: 18px;">Asunto:</label><br>
-            <input type="text" class="form-control" name="asunto" placeholder="Asunto" required style="border-radius: 5px; width: 85%; margin-left: 1px;">
+            <input type="text" class="form-control" name="asunto" id="asunto" placeholder="Asunto" required style="border-radius: 5px; width: 85%; margin-left: 1px;">
 
                 <br>
 
             <label style="font-size: 18px;">Mensaje:</label>
-            <textarea class="form-control" rows="5" name="mensaje" placeholder="Mensaje" required style="border-radius: 5px; width: 85%;"></textarea>
+            <textarea class="form-control" rows="5" name="mensaje" id="mensaje" placeholder="Mensaje" required style="border-radius: 5px; width: 85%;"></textarea>
 
             <input type="hidden" name="correo" value="<?php echo Auth::user()->correo; ?>">
 
           </div>
 
-          <button class="btn btn-lg btn-primary" type="submit" id="btnc">ENVIAR</button> <br><br>
+          <img src="images/cargando.gif" width="175" height="50" id="cargandoAyuda" style="display: none;">
+
+          <button class="btn btn-lg btn-primary" type="submit" id="btnAyuda" name="btnAyuda">ENVIAR</button> <br><br>
  
         {!!Form::close()!!}
 

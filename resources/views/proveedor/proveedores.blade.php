@@ -1,7 +1,16 @@
   @extends ('layouts.cpanelp')
 @section ('contenido') 
 
-  <div class="row">
+
+<div class="row">
+
+
+ <div class="col-lg-1">  
+  </div>
+
+
+  <div class="col-lg-10">  
+
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <div class="table-responsive" style="overflow-x:inherit">
@@ -32,7 +41,19 @@
 
       </div>
     </div>
-      
+
+
   </div>
+
+
+
+    <div class="col-lg-1">  
+    </div>
+
+
+      
+</div>
+
+
 
 @endsection

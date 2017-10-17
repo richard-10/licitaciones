@@ -2,120 +2,145 @@
 @section ('contenido') 
 
 @include('convocatoriasactivas.modal')
+@include('convocatoriasactivas.modalP')
+
+
+
+@if(Auth::user()->privilegio == 1)
+
+  <div class="row">
+
+    <div class="col-lg-1">  
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="small-box bg-yellow">
+            <div class="inner">
+              <?php  $nro2 = DB::select('SELECT COUNT(*) as cant FROM convocatoria WHERE estado="parcial"'); ?>
+                @foreach($nro2 as $res2)
+                  <h3>{{$res2->cant}}</h3>
+                @endforeach
+              <p style="font-size: 17px;">Adjudicación Parcial</p>
+            </div>
+
+            <div class="icon">
+              <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            </div>
+            <a href="{!!URL::to('parciales')!!}" class="small-box-footer" style="font-size: 15px;">Ver Todas <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+        </div>
+          
+    </div>
+
+    <div class="col-lg-1">  
+    </div>
+
+  </div>
+
+@endif 
 
 
   <div class="row">
 
-    <div class="col-lg-2">  
+    <div class="col-lg-1">  
     </div>
 
 
-    <div class="col-lg-8">  
+    <div class="col-lg-10">  
+
         
         <center> <h2 style="text-transform: uppercase; font-weight: bold;"> Convocatorias Activas </h2> </center>
 
 
 @if(Auth::user()->privilegio != 1)
 
-  <div class="panel-group" id="accordion" role="tablist">
-
-    @foreach($sql as $mov)
-
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="ab">
-
-          <h2 class="panel-title">
-            <?php $x = "#".$mov->idpublic; ?>
-              <a href="<?php echo "$x"; ?>" data-toggle="collapse" data-parent="#accordion">
-                <strong style="font-size: 18px;">{{$mov->titulo}}</strong>
-                
-                <i class="fa fa-chevron-circle-down pull-right" aria-hidden="true" style="font-size: 25px;"></i>
-
-              </a><br>
-              {{$mov->nombre}}
-              <p class="pull-right" style="font-size: 17px;"> {{$mov->fecha}} </p>
-          </h2>
-
-        </div>  
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive" style="overflow-x:inherit">
 
 
-        <div id="{{$mov->idpublic}}" class="panel-collapse collapse">
-          <div class="panel-body">
+      <table class="table table-striped table-bordered table-condensed table-hover" style="background: white">
+          <thead>
+            <th style="font-size: 16px;"><center>Título</center></th>
+            <th style="font-size: 16px;"><center>Categoria</center></th>
+            <th style="font-size: 16px;"><center>Fecha-Publicación</center></th>
+            <th style="font-size: 16px;"><center>Opciones</center></th>
+          </thead>
+          <tbody align="center" id="body_empresa">          
+          @foreach($sql as $mov)
+          <tr>
+            <td style="font-size: 15px;">{{$mov->titulo}}</td>          
+            <td style="font-size: 15px;">{{$mov->nombre}}</td>
+            <td style="font-size: 15px;">{{$mov->fecha}}</td>
+            <td style="font-size: 15px;"> <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 14px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 18px;"></i> DESCARGAR</button></a> 
+            <a href='mailto:info@incotec.com.bo'><button class='btn btn-primary' style='background-color: black; font-size: 15px;'>Enviar Propuesta</button></a>
+            </td>
+          </tr>
+          @endforeach
+          </tbody>          
+      </table>
 
-          <a href="{!! nl2br(e($mov->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 15px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> DESCARGAR</button></a>
+      <div class="pull-left"> {!!$sql->render()!!}  </div>
 
-            <!-- <p style="font-size: 18px;">{!! nl2br(e($mov->descripcion)) !!}</p> -->
+      </div>
+    </div>
 
-            <a href='mailto:info@incotec.com.bo'><button class='btn btn-primary' style='background-color: black; font-size: 15px;'>Enviar Propuesta</button></a>        
-
-          </div>
-        </div>
-    </div>  
-
-    @endforeach
-
-    {!!$sql->render()!!}
-
-  </div>
 
 @endif 
+
 
 
 <!-- ///////////////////////////////////////////////////////////////////////////////////////// -->
 
 
+
 @if(Auth::user()->privilegio == 1)
 
-  @include('alerts.success')
 
-  <div class="panel-group" id="accordion" role="tablist">
-
-    @foreach($sqlAdm as $movAdm)
-
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="ab">
-
-          <h2 class="panel-title">
-            <?php $x = "#".$movAdm->idpublic; ?>
-              <a href="<?php echo "$x"; ?>" data-toggle="collapse" data-parent="#accordion">
-                <strong style="font-size: 18px;">{{$movAdm->titulo}}</strong>
-                
-                <i class="fa fa-chevron-circle-down pull-right" aria-hidden="true" style="font-size: 25px;"></i>
-
-              </a><br>
-              {{$movAdm->nombre}}
-              <p class="pull-right" style="font-size: 17px;"> {{$movAdm->fecha}} </p>
-          </h2>
-
-        </div>  
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @include('alerts.success')
+        <div class="table-responsive" style="overflow-x:inherit">
 
 
-        <div id="{{$movAdm->idpublic}}" class="panel-collapse collapse">
-          <div class="panel-body">
+      <table class="table table-striped table-bordered table-condensed table-hover" style="background: white">
+          <thead>
+            <th style="font-size: 16px;"><center>Título</center></th>
+            <th style="font-size: 16px;"><center>Categoria</center></th>
+            <th style="font-size: 16px;"><center>Fecha-Publicación</center></th>
+            <th style="font-size: 16px;"><center>Opciones</center></th>
+          </thead>
+          <tbody align="center" id="body_empresa">          
+          @foreach($sqlAdm as $movAdm)
+          <tr>
+            <td style="font-size: 15px;">{{$movAdm->titulo}}</td>          
+            <td style="font-size: 15px;">{{$movAdm->nombre}}</td>
+            <td style="font-size: 15px;">{{$movAdm->fecha}}</td>
+            <td style="font-size: 15px;"> 
 
-          <a href="{!! nl2br(e($movAdm->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 15px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> DESCARGAR</button></a>
+              <a href="{!! nl2br(e($movAdm->descripcion)) !!}"><button class="btn btn-primary" style="font-size: 14px;"><i class="fa fa-download" aria-hidden="true" style="font-size: 18px;"></i> DESCARGAR</button></a> 
 
+              <button class="btn btn-success" style="font-size: 14px;" data-toggle="modal" data-target="#ModalAdjudicar" data-id="{{$movAdm->idpublic}}" data-t="{{$movAdm->titulo}}" data-c="{{$movAdm->nombre}}"><i class="fa fa-file-text" aria-hidden="true" style="font-size: 17px;"></i> ADJUDICAR-TOTAL</button>
 
-            <button class="btn btn-warning" style="font-size: 15px;" data-toggle="modal" data-target="#ModalAdjudicar" data-id="{{$movAdm->idpublic}}" data-t="{{$movAdm->titulo}}" data-c="{{$movAdm->nombre}}"><i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> ADJUDICAR</button>
+              <button class="btn btn-warning" style="font-size: 14px;" data-toggle="modal" data-target="#ModalAdjudicarP" data-id="{{$movAdm->idpublic}}" data-t="{{$movAdm->titulo}}" data-c="{{$movAdm->nombre}}"><i class="fa fa-file-text" aria-hidden="true" style="font-size: 17px;"></i> ADJUDICAR-PARCIAL</button>
 
-          </div>
-        </div>
-    </div>  
+            </td>
+          </tr>
+          @endforeach
+          </tbody>          
+      </table>
 
-    @endforeach
-    
-    {!!$sqlAdm->render()!!}
+      <div class="pull-left"> {!!$sqlAdm->render()!!}  </div>
 
-  </div>
+      </div>
+    </div>
 
 @endif 
 
 
-    </div>
+</div>
 
 
 
-    <div class="col-lg-2">  
+    <div class="col-lg-1">  
     </div>
 
   </div>

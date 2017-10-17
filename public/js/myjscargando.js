@@ -65,7 +65,7 @@ $(document).ready(function() {
     });
 
 
-        $('#btnAdjudicar').click(function() {  
+    $('#btnAdjudicar').click(function() {  
 
         if ( $("#cboproveedor").val() != '' ) {
 
@@ -75,7 +75,31 @@ $(document).ready(function() {
             $("#cargandoAd").show();
 
         }
-       
+
+    });
+
+
+    $('#btnAdjudicarP').click(function() {  
+
+        if ( ($("#cboproveedorP").val() != '') && ($("#mensajeAd").val() != '') ) {
+
+            $("#btnAdjudicarP").css("display","none");
+            $("#btnAdjudicarCancelarP").css("display","none");
+
+            $("#cargandoAdP").show();
+
+        }
+
+    });
+
+
+    $('#btnAdjudicarC').click(function() {  
+
+        $("#btnAdjudicarC").css("display","none");
+        $("#btnAdjudicarCancelarC").css("display","none");
+
+        $("#cargandoAdC").show(); 
+
     });
 
 

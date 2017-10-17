@@ -20,6 +20,9 @@ Route::resource('convocatoriasaprobadas','ConvocatoriasAprobadasController');
 
 Route::resource('convocatoriasactivas','ConvocatoriasActivasController');
 Route::post('adjudicar','ConvocatoriasActivasController@adjudicar_convocatoria');
+Route::post('adjudicarParcial','ConvocatoriasActivasController@adjudicar_convocatoria_parcial');
+Route::resource('parciales','ConvocatoriasActivasController@parciales');
+Route::post('cerrar','ConvocatoriasActivasController@cerrar_convocatoria');
 
 Route::resource('convocatoriasinactivas','ConvocatoriasInactivasController');
 
